@@ -23,7 +23,7 @@
     "data/records/schema"
   ],
   "dependencies": {
-    "@red-cup-engineering/javascript-node-services-section": "0.3.2"
+    "@red-cup-engineering/javascript-node-engineering-services-section": "0.3.2"
   },
   "scripts": {
     "test": "run-package-tests",
@@ -34,8 +34,8 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@red-cup-engineering/jsonl-services-section": "0.1.0",
-    "@red-cup-engineering/jsnode-package-services-section": "0.2.4"
+    "@red-cup-engineering/jsonl-engineering-services-section": "0.1.0",
+    "@red-cup-engineering/jsnode-package-engineering-services-section": "0.2.4"
   },
   "funding": {
     "type": "individual",
