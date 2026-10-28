@@ -1,0 +1,32 @@
+name: Test original File private-owner checkout admissibility without source transfer
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/original-file-owner-access-read.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  private-file-owner-access-read:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Observe whether this unprivileged Code workflow can read the original private File owner
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # The response body is never printed or retained. This is a
+          # capability observation, not an attempted source copy or release.
+          if gh api --silent \
+              repos/red-cup-engineering/computer-file-engineering-services-section \
+              >/dev/null 2>/dev/null; then
+            echo "ORIGINAL_FILE_REPOSITORY_ACCESS=available"
+          else
+            echo "ORIGINAL_FILE_REPOSITORY_ACCESS=unavailable"
+          fi
+          echo "No private repository source was read into an artifact, log or public package."
