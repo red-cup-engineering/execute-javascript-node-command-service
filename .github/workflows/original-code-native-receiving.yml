@@ -1,0 +1,173 @@
+name: Original Code bounded descriptor and installed kernel consumer receiving
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/original-code-native-receiving.yml"
+      - ".npmrc"
+      - "LICENSE"
+      - "README.md"
+      - "package.json"
+      - "scripts/**"
+      - "data/records/schema/**"
+      - "test/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/original-code-native-receiving.yml"
+      - ".npmrc"
+      - "LICENSE"
+      - "README.md"
+      - "package.json"
+      - "scripts/**"
+      - "data/records/schema/**"
+      - "test/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: original-code-receiving-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  original-source-and-installed-kernel-consumer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact original Code proposal
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Original Node 24 native runtime
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: "24"
+      - name: Install original declared dependencies from house registry
+        run: npm install --ignore-scripts --no-audit --no-fund --no-package-lock --registry=https://registry.561.group/
+      - name: Require all original Code tests, native Linux flock and policy tests
+        shell: bash
+        env:
+          CODE_REQUIRE_NATIVE_FLOCK: "1"
+        run: |
+          set -euo pipefail
+          npm test
+          npm run test:native-flock
+      - name: Double-pack original candidate and check immutable archive identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/code-pack-a" "$RUNNER_TEMP/code-pack-b" "$RUNNER_TEMP/code-qualified"
+          a=$(npm pack --ignore-scripts --silent --pack-destination "$RUNNER_TEMP/code-pack-a")
+          b=$(npm pack --ignore-scripts --silent --pack-destination "$RUNNER_TEMP/code-pack-b")
+          test "$a" = "$b"
+          cmp "$RUNNER_TEMP/code-pack-a/$a" "$RUNNER_TEMP/code-pack-b/$b"
+          cp "$RUNNER_TEMP/code-pack-a/$a" "$RUNNER_TEMP/code-qualified/"
+          cd "$RUNNER_TEMP/code-qualified"
+          sha256sum "$a" > SHA256SUMS
+          sha256sum --check --strict SHA256SUMS
+          tar -tzf "$a" | grep -Fx 'package/LICENSE'
+          tar -tzf "$a" | grep -Fx 'package/scripts/execute-javascript-node-command.mjs'
+          tar -tzf "$a" | grep -Fx 'package/test/installed-original-code-consumer.mjs'
+          tar -tzf "$a" | grep -Fx 'package/test/original-kernel-flock-descriptor.test.mjs'
+          tar -xOf "$a" package/package.json | node -e '
+            let source="";
+            process.stdin.on("data",chunk=>source+=chunk);
+            process.stdin.on("end",()=>{
+              const pkg=JSON.parse(source);
+              if(pkg.name!=="@red-cup-engineering/execute-javascript-node-command-service" ||
+                 pkg.version!=="0.4.1-dev.0" || pkg.license!=="MIT" ||
+                 pkg.exports["."]!=="./scripts/execute-javascript-node-command.mjs")
+                 process.exit(2);
+            });'
+          echo "$a" > ARCHIVE
+      - name: Independently install exact archived Code bytes and run original consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/installed-code"
+          cd "$RUNNER_TEMP/installed-code"
+          npm init -y --silent >/dev/null
+          archive=$(cat "$RUNNER_TEMP/code-qualified/ARCHIVE")
+          npm install --ignore-scripts --no-audit --no-fund --no-package-lock \
+            "$RUNNER_TEMP/code-qualified/$archive" \
+            --registry=https://registry.561.group/
+          cp "$GITHUB_WORKSPACE/test/installed-original-code-consumer.mjs" ./original-code-consumer.mjs
+          node original-code-consumer.mjs
+      - name: Retain exact original source-qualified archive and checksums
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: original-code-qualified-source-${{ github.sha }}
+          path: ${{ runner.temp }}/code-qualified/
+          retention-days: 30
+          if-no-files-found: error
+
+  attest-qualified-code:
+    needs: original-source-and-installed-kernel-consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - name: Download exact independently installed Code artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: original-code-qualified-source-${{ github.sha }}
+          path: ${{ runner.temp }}/code-qualified/
+      - name: Require checksum and exact received original Code library
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/code-qualified"
+          shopt -s nullglob
+          files=( ./*.tgz )
+          test "${#files[@]}" -eq 1
+          test "$(wc -l < SHA256SUMS)" -eq 1
+          sha256sum --check --strict SHA256SUMS
+          tar -tzf "${files[0]}" | grep -Fx 'package/scripts/execute-javascript-node-command.mjs'
+      - name: Sign source-qualified Code package bytes with GitHub Sigstore
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
+        with:
+          subject-path: ${{ runner.temp }}/code-qualified/*.tgz
+      - name: Independently verify signer, source revision and reject tampering
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          archives=( "$RUNNER_TEMP"/code-qualified/*.tgz )
+          test "${#archives[@]}" -eq 1
+          gh attestation verify "${archives[0]}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/original-code-native-receiving.yml" \
+            --source-digest "$GITHUB_SHA" \
+            --deny-self-hosted-runners \
+            --format json > "$RUNNER_TEMP/verified-code.json"
+          node --input-type=module - "${archives[0]}" "$RUNNER_TEMP/verified-code.json" <<'NODE'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          import {readFileSync} from 'node:fs';
+          const [, , archive, verified]=process.argv;
+          const hash=createHash('sha256').update(readFileSync(archive)).digest('hex');
+          const records=JSON.parse(readFileSync(verified,'utf8'));
+          assert.ok(Array.isArray(records)&&records.length>0);
+          assert.ok(records.some(r=>r?.verificationResult?.statement?.predicateType==='https://slsa.dev/provenance/v1' &&
+            r?.verificationResult?.statement?.subject?.some(s=>s.digest?.sha256===hash)));
+          console.log('Independently authenticated exact original Code npm archive');
+          NODE
+          cp "${archives[0]}" "$RUNNER_TEMP/tampered-original-code.tgz"
+          printf 'X' >> "$RUNNER_TEMP/tampered-original-code.tgz"
+          if gh attestation verify "$RUNNER_TEMP/tampered-original-code.tgz" \
+            --repo "$GITHUB_REPOSITORY" \
+            --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/original-code-native-receiving.yml" \
+            --source-digest "$GITHUB_SHA" > "$RUNNER_TEMP/unexpected-tampered-acceptance.txt" 2>&1; then
+            echo "::error::Changed Code bytes passed independent signature verification"
+            exit 1
+          fi
+          echo "Original Code archive accepted; tampered bytes refused"

@@ -8,6 +8,14 @@ import operationInputSchema from "../data/records/schema/execute-javascript-node
 import operationOutputSchema from "../data/records/schema/execute-javascript-node-command.output.schema.json" with { type: "json" };
 import { runJavascriptNodeOperation } from "@red-cup-engineering/javascript-node-services-section/operation";
 
+/** Local policy capability, not caller request data or a process-quiescence receipt. */
+export const javascriptNodeCommandExecutionPolicy = Object.freeze({
+  type: "JavascriptNodeCommandExecutionPolicyCapability",
+  version: 1,
+  maximumOutputBytes: "node-spawn-sync-max-buffer",
+  processGroup: "inherited",
+});
+
 /**
  * Executes one exact program request without a shell.
  * @param {object} candidateRequest An exact JavascriptNodeCommandExecutionRequest@1.
