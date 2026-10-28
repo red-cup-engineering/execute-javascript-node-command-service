@@ -30,3 +30,21 @@ jobs:
             echo "ORIGINAL_FILE_REPOSITORY_ACCESS=unavailable"
           fi
           echo "No private repository source was read into an artifact, log or public package."
+
+      - name: Observe whether the original exact File candidate was issued in the house package registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          # No private metadata or credentials are printed. A published
+          # version is a precondition for an honest outsider-installed
+          # consumer; source version alone never proves distribution.
+          if npm view \
+              @red-cup-engineering/computer-file-engineering-services-section@0.8.5-dev.1 \
+              version --registry=https://registry.561.group/ \
+              --fetch-timeout=10000 --fetch-retries=0 \
+              >/dev/null 2>/dev/null; then
+            echo "ORIGINAL_FILE_EXACT_REGISTRY_EDITION=available"
+          else
+            echo "ORIGINAL_FILE_EXACT_REGISTRY_EDITION=unavailable"
+          fi
+          echo "No private package was downloaded or copied into this public workflow."
