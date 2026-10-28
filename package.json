@@ -21,7 +21,8 @@
     "scripts",
     "package.json",
     "data/records/schema",
-    "test/original-kernel-flock-descriptor.test.mjs"
+    "test/original-kernel-flock-descriptor.test.mjs",
+    "test/installed-original-code-consumer.mjs"
   ],
   "dependencies": {
     "@red-cup-engineering/javascript-node-services-section": "0.3.2"
