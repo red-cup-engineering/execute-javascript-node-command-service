@@ -48,3 +48,18 @@ jobs:
             echo "ORIGINAL_FILE_EXACT_REGISTRY_EDITION=unavailable"
           fi
           echo "No private package was downloaded or copied into this public workflow."
+      - name: Observe if actual previously issued File lease editions can be installed as consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          for edition in 0.8.4 0.8.3 0.8.2; do
+            if npm view \
+                "@red-cup-engineering/computer-file-engineering-services-section@$edition" \
+                version --registry=https://registry.561.group/ \
+                --fetch-timeout=10000 --fetch-retries=0 \
+                >/dev/null 2>/dev/null; then
+              echo "ORIGINAL_FILE_PUBLISHED_EDITION_AVAILABLE=$edition"
+            else
+              echo "ORIGINAL_FILE_PUBLISHED_EDITION_UNAVAILABLE=$edition"
+            fi
+          done
