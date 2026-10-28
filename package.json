@@ -1,6 +1,6 @@
 {
   "name": "@red-cup-engineering/execute-javascript-node-command-service",
-  "version": "0.4.0",
+  "version": "0.4.1-dev.0",
   "description": "Executes one exact typed program request without a shell and returns its complete immutable receipt; also executes a request with this process's own stdio inherited by the child for a delegate that must hand its live stdin/stdout/stderr connection straight to another program.",
   "repository": {
     "type": "git",
@@ -20,7 +20,8 @@
   "files": [
     "scripts",
     "package.json",
-    "data/records/schema"
+    "data/records/schema",
+    "test/original-kernel-flock-descriptor.test.mjs"
   ],
   "dependencies": {
     "@red-cup-engineering/javascript-node-services-section": "0.3.2"
@@ -28,7 +29,8 @@
   "scripts": {
     "test": "run-package-tests",
     "pack:dry-run": "npm pack --dry-run --ignore-scripts",
-    "check": "check-package-syntax"
+    "check": "check-package-syntax",
+    "test:native-flock": "CODE_REQUIRE_NATIVE_FLOCK=1 node --test test/original-kernel-flock-descriptor.test.mjs"
   },
   "engines": {
     "node": ">=24"
