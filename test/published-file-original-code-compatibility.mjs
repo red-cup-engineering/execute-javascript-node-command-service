@@ -13,6 +13,7 @@ import { readFileSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createRequire } from 'node:module';
+import { dirname, join as joinPath } from 'node:path';
 import {
   acquireLocalFileLeaseSync, LocalFileLeaseError, localFileLeaseSchemas,
 } from '@red-cup-engineering/computer-file-engineering-services-section/local-file-lease';
@@ -23,8 +24,13 @@ import {
 const require = createRequire(import.meta.url);
 const codeName='@red-cup-engineering/execute-javascript-node-command-service';
 const fileName='@red-cup-engineering/computer-file-engineering-services-section';
-const filePkg=require(fileName+'/package.json');
-const codePkg=require(codeName+'/package.json');
+// The public packages intentionally do NOT export package.json. Inspect
+// their actual installed bytes adjacent to their *exported* entrypoints,
+// never invent an undocumented package export for the sake of the assay.
+const fileModulePath=require.resolve(fileName+'/local-file-lease');
+const codeModulePath=require.resolve(codeName);
+const filePkg=JSON.parse(readFileSync(joinPath(dirname(fileModulePath),'../package.json'),'utf8'));
+const codePkg=JSON.parse(readFileSync(joinPath(dirname(codeModulePath),'../package.json'),'utf8'));
 const expectedCode='0.4.1-dev.0', expectedFile='0.8.4';
 const expectedFileLeaseBlob='21c04c16ec9b00692e87a2a283d1aa343ef4b403';
 const linux=process.platform==='linux'&&
@@ -80,8 +86,7 @@ test('original published exact File and signed Code package/legacy source identi
     'JavascriptNodeCommandExecutionPolicyCapability');
   assert.equal(javascriptNodeCommandExecutionPolicy.version,1);
   assert.ok(Object.isFrozen(javascriptNodeCommandExecutionPolicy));
-  const leasePath=require.resolve(fileName+'/local-file-lease');
-  const bytes=readFileSync(leasePath);
+  const bytes=readFileSync(fileModulePath);
   const sha=createHash('sha1').update(
     Buffer.concat([Buffer.from('blob '+bytes.length+'\0','utf8'),bytes])
   ).digest('hex');
