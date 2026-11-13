@@ -5,7 +5,7 @@ import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { isolateJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-services-section/isolate-javascript-node-command-execution-request";
+import { isolateJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/isolate-javascript-node-command-execution-request";
 import { executeJavascriptNodeCommandAsynchronously } from "../scripts/execute-javascript-node-command-asynchronously.mjs";
 
 const request = (arguments_, fields = {}) => ({

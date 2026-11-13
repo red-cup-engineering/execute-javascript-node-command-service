@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-services-section/admit-javascript-node-command-execution-request";
+import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/admit-javascript-node-command-execution-request";
 
-import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-services-section/project-javascript-node-command-execution-receipt";
+import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-engineering-services-section/project-javascript-node-command-execution-receipt";
 
 import operationInputSchema from "../data/records/schema/execute-javascript-node-command.input.schema.json" with { type: "json" };
 import operationOutputSchema from "../data/records/schema/execute-javascript-node-command.output.schema.json" with { type: "json" };
-import { runJavascriptNodeOperation } from "@red-cup-engineering/javascript-node-services-section/operation";
+import { runJavascriptNodeOperation } from "@red-cup-engineering/javascript-node-engineering-services-section/operation";
 
 /** Local policy capability, not caller request data or a process-quiescence receipt. */
 export const javascriptNodeCommandExecutionPolicy = Object.freeze({

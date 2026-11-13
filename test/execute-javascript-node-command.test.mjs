@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { parseLines, serializeLines } from "@red-cup-engineering/jsonl-services-section";
+import { parseLines, serializeLines } from "@red-cup-engineering/jsonl-engineering-services-section";
 import { executeJavascriptNodeCommand, javascriptNodeCommandExecutionPolicy } from "../scripts/execute-javascript-node-command.mjs";
 
 const nativeRequest = (program) => ({

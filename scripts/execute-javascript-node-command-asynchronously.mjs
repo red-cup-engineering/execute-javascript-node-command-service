@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-services-section/admit-javascript-node-command-execution-request";
+import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/admit-javascript-node-command-execution-request";
 
-import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-services-section/project-javascript-node-command-execution-receipt";
+import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-engineering-services-section/project-javascript-node-command-execution-receipt";
 
 const positive = (value) => value === undefined || (Number.isSafeInteger(value) && value > 0);
 
