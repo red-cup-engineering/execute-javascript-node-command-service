@@ -1,10 +1,18 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/admit-javascript-node-command-execution-request";
+import { admitExecutionRequest, projectExecutionReceipt } from "../src/execution-contract.mjs";
 
-import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-engineering-services-section/project-javascript-node-command-execution-receipt";
+
 
 const positive = (value) => value === undefined || (Number.isSafeInteger(value) && value > 0);
+
+// Retain at most the existing UTF-16 unit bound, never half of a decoded
+// Unicode scalar. A scalar larger than the remaining tail is omitted whole.
+function outputTail(text, limit) {
+  const tail = text.slice(-limit);
+  const first = tail.charCodeAt(0);
+  return first >= 0xdc00 && first <= 0xdfff ? tail.slice(1) : tail;
+}
 
 /** Kill the child's whole process group: the program and everything it started. */
 function killGroup(child) {
@@ -23,16 +31,16 @@ function killGroup(child) {
  * @param {{ timeoutMilliseconds?: number, outputLimit?: number }} policy Local execution bounds, not
  *   part of the caller's command data: the time the program may run, and how many characters of the
  *   end of each output stream are kept.
- * @returns {Promise<object>} An immutable JavascriptNodeCommandExecutionReceipt@1; never rejects
- *   once the request and policy are admitted.
+ * @returns {Promise<object>} An immutable JavascriptNodeCommandExecutionReceipt@1 for native outcomes.
+ *   An unexpected receipt-construction fault rejects, rather than hanging or inventing a receipt.
  */
 export function executeJavascriptNodeCommandAsynchronously(candidateRequest, policy = {}) {
-  const request = admitJavascriptNodeCommandExecutionRequest(candidateRequest);
+  const request = admitExecutionRequest(candidateRequest);
   if (policy === null || typeof policy !== "object" || Array.isArray(policy) || !positive(policy.timeoutMilliseconds) || !positive(policy.outputLimit)) {
     throw new TypeError("execution policy timeoutMilliseconds and outputLimit must be positive safe integers when supplied");
   }
   const limit = policy.outputLimit ?? Number.POSITIVE_INFINITY;
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let stdout = "";
     let stderr = "";
     let settled = false;
@@ -41,12 +49,14 @@ export function executeJavascriptNodeCommandAsynchronously(candidateRequest, pol
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      resolve(projectJavascriptNodeCommandExecutionReceipt({
-        type: "JavascriptNodeCommandExecutionReceiptProjectionRequest",
-        version: 1,
-        request,
-        result: { type: "JavascriptNodeCommandExecutionResult", version: 1, status, signal, stdout, stderr, error },
-      }));
+      try {
+        resolve(projectExecutionReceipt({
+          request,
+          result: { type: "JavascriptNodeCommandExecutionResult", version: 1, status, signal, stdout, stderr, error },
+        }));
+      } catch (receiptError) {
+        reject(receiptError);
+      }
     };
     let child;
     try {
@@ -69,8 +79,8 @@ export function executeJavascriptNodeCommandAsynchronously(candidateRequest, pol
         killGroup(child);
       }, policy.timeoutMilliseconds);
     }
-    child.stdout.setEncoding("utf8").on("data", (chunk) => { stdout = (stdout + chunk).slice(-limit); });
-    child.stderr.setEncoding("utf8").on("data", (chunk) => { stderr = (stderr + chunk).slice(-limit); });
+    child.stdout.setEncoding("utf8").on("data", (chunk) => { stdout = outputTail(stdout + chunk, limit); });
+    child.stderr.setEncoding("utf8").on("data", (chunk) => { stderr = outputTail(stderr + chunk, limit); });
     // A program that exits before reading its input closes the pipe; the receipt still reports its exit.
     if (request.input !== null) child.stdin.on("error", () => undefined).end(request.input);
     child.on("error", (error) => finish(null, null, error.message));

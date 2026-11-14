@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { admitJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/admit-javascript-node-command-execution-request";
+import { admitExecutionRequest, projectExecutionReceipt } from "../src/execution-contract.mjs";
 
-import { projectJavascriptNodeCommandExecutionReceipt } from "@red-cup-engineering/javascript-node-engineering-services-section/project-javascript-node-command-execution-receipt";
+
 
 import operationInputSchema from "../data/records/schema/execute-javascript-node-command.input.schema.json" with { type: "json" };
 import operationOutputSchema from "../data/records/schema/execute-javascript-node-command.output.schema.json" with { type: "json" };
-import { runJavascriptNodeOperation } from "@red-cup-engineering/javascript-node-engineering-services-section/operation";
+import { runJavascriptNodeOperation } from "@red-cup-engineering/node-js-function-engineering-services-section/operation";
 
 /** Local policy capability, not caller request data or a process-quiescence receipt. */
 export const javascriptNodeCommandExecutionPolicy = Object.freeze({
@@ -23,7 +23,7 @@ export const javascriptNodeCommandExecutionPolicy = Object.freeze({
  * @returns {object} An immutable JavascriptNodeCommandExecutionReceipt@1.
  */
 export function executeJavascriptNodeCommand(candidateRequest, policy = {}) {
-  const request = admitJavascriptNodeCommandExecutionRequest(candidateRequest);
+  const request = admitExecutionRequest(candidateRequest);
   if (policy === null || typeof policy !== "object" || Array.isArray(policy)
     || Object.keys(policy).some(key => !["timeoutMilliseconds", "maximumOutputBytes", "inheritedFileDescriptors"].includes(key))
     || ["timeoutMilliseconds", "maximumOutputBytes"].some(key => policy[key] !== undefined && (!Number.isSafeInteger(policy[key]) || policy[key] <= 0))
@@ -50,9 +50,7 @@ export function executeJavascriptNodeCommand(candidateRequest, policy = {}) {
     stderr: typeof childResult.stderr === "string" ? childResult.stderr : "",
     error: typeof childResult.error === "string" ? childResult.error : childResult.error?.message ?? "",
   };
-  return projectJavascriptNodeCommandExecutionReceipt({
-    type: "JavascriptNodeCommandExecutionReceiptProjectionRequest",
-    version: 1,
+  return projectExecutionReceipt({
     request,
     result,
   });

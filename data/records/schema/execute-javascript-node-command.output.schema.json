@@ -1,1 +1,118 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","description":"An immutable JavascriptNodeCommandExecutionReceipt@1.","title":"executeJavascriptNodeCommandOutput","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JavascriptNodeCommandExecutionReceipt",
+  "type": "object",
+  "required": [
+    "type",
+    "version",
+    "request",
+    "result"
+  ],
+  "properties": {
+    "type": {
+      "const": "JavascriptNodeCommandExecutionReceipt"
+    },
+    "version": {
+      "const": 1
+    },
+    "request": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "JavascriptNodeCommandExecutionRequest",
+      "type": "object",
+      "required": [
+        "type",
+        "version",
+        "command",
+        "arguments",
+        "directory",
+        "environment",
+        "input"
+      ],
+      "properties": {
+        "type": {
+          "const": "JavascriptNodeCommandExecutionRequest"
+        },
+        "version": {
+          "const": 1
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "directory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "input": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": [
+        "type",
+        "version",
+        "status",
+        "signal",
+        "stdout",
+        "stderr",
+        "error"
+      ],
+      "properties": {
+        "type": {
+          "const": "JavascriptNodeCommandExecutionResult"
+        },
+        "version": {
+          "const": 1
+        },
+        "status": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "signal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stdout": {
+          "type": "string"
+        },
+        "stderr": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

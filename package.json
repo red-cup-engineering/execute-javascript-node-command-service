@@ -1,6 +1,6 @@
 {
   "name": "@red-cup-engineering/execute-javascript-node-command-service",
-  "version": "0.4.2",
+  "version": "0.4.3-dev.0",
   "description": "Executes one exact typed program request without a shell and returns its complete immutable receipt; also executes a request with this process's own stdio inherited by the child for a delegate that must hand its live stdin/stdout/stderr connection straight to another program.",
   "repository": {
     "type": "git",
@@ -21,11 +21,13 @@
     "scripts",
     "package.json",
     "data/records/schema",
-    "test/original-kernel-flock-descriptor.test.mjs",
-    "test/installed-original-code-consumer.mjs"
+    "src",
+    "test"
   ],
   "dependencies": {
-    "@red-cup-engineering/javascript-node-engineering-services-section": "^0.4.2"
+    "@red-cup-engineering/node-js-function-engineering-services-section": "0.5.2-dev.0",
+    "@red-cup-engineering/json-engineering-services-section": "0.4.3-dev.0",
+    "@red-cup-engineering/signcell": "0.17.5"
   },
   "scripts": {
     "test": "run-package-tests",
@@ -43,5 +45,15 @@
   "funding": {
     "type": "individual",
     "url": "https://github.com/561-group/.github/blob/main/TIPS.md"
-  }
+  },
+  "receivingTests": [
+    "test/execute-javascript-node-command-asynchronously.test.mjs",
+    "test/execute-javascript-node-command-with-inherited-stdio.test.mjs",
+    "test/execute-javascript-node-command.test.mjs",
+    "test/execution-contract.test.mjs",
+    "test/execution-receipt-settlement.test.mjs",
+    "test/inherited-file-descriptors.test.mjs",
+    "test/original-kernel-flock-descriptor.test.mjs",
+    "test/installed-original-code-consumer.mjs"
+  ]
 }

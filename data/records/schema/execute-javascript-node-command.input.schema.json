@@ -1,1 +1,56 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","description":"An exact JavascriptNodeCommandExecutionRequest@1.","title":"executeJavascriptNodeCommandInput","type":"object"}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JavascriptNodeCommandExecutionRequest",
+  "type": "object",
+  "required": [
+    "type",
+    "version",
+    "command",
+    "arguments",
+    "directory",
+    "environment",
+    "input"
+  ],
+  "properties": {
+    "type": {
+      "const": "JavascriptNodeCommandExecutionRequest"
+    },
+    "version": {
+      "const": 1
+    },
+    "command": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arguments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "directory": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "input": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
