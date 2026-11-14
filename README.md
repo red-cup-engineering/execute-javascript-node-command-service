@@ -54,7 +54,7 @@ roles, or replace its full dependency-closed receiving obligation.
 ## Synchronous local execution policy
 
 `executeJavascriptNodeCommand(request, policy)` admits the unchanged exact
-`JavascriptNodeCommandExecutionRequest@1` through the JavaScript Node owner and
+`JavascriptNodeCommandExecutionRequest@1` through its private JSON/SignCell-typed execution boundary and
 projects the unchanged immutable `JavascriptNodeCommandExecutionReceipt@1`.
 Policy is local trusted caller configuration, not request data or an additional
 NDJSON operation field. The existing descriptor-inheritance proposal and its File
@@ -97,3 +97,13 @@ stdout and stderr overflow rejection with finite partial diagnostics, nonzero
 exit and timeout evidence, invalid policy refusal, and descriptor inheritance.
 The capability can be adopted by consumers without changing the shared request
 or receipt schemas or the behavior of existing unbounded callers.
+
+## Current typed boundary and qualification scope
+
+The execution owner admits its current seven-field request before spawning: exact type/version, explicit nonempty command/directory, a string argument vector, null or string-valued environment, and null or string input. No implicit invocation fields or payload execution-policy fields are admitted. The shared JSON carrier first snapshots inert values without invoking accessors or coercion hooks; SignCell admits the declared schemas. Native result fields and the request values actually executed are retained in an immutable typed receipt, not converted into a success or process-quiescence claim. Environment null retains native inheritance; an explicit map replaces the captured execution environment, unchanged from the existing executor.
+
+These are private boundaries of this actual executor, not restoration of the deleted JavaScriptNode admission/projection services or a new public command authority. The NDJSON face uses the current Function operation runtime. Synchronous local FD/capture policy, asynchronous output-tail/cancellation behavior, and inherited-stdio's distinct convenience request remain separate. The legacy isolation-specific test resolves its optional supplier only in that existing platform-qualified test; neither an isolation implementation nor stronger containment is supplied here.
+
+Asynchronous capture retains a tail bounded in UTF-16 code units. If the left truncation boundary would split a Unicode scalar, that partial scalar is omitted; the tail can therefore contain fewer units than the limit. Ordinary native outcomes remain typed receipts. An unexpected receipt-construction failure rejects the asynchronous promise rather than escaping its completion callback or leaving the promise pending. This does not strengthen process containment.
+
+Native source and packed receiving use genuine source/archive prerequisites. They do not establish frozen registry installation, issuance, production File acceptance, or permission to invoke commands on a managed host. Existing dependency-lock and upstream approval limits remain explicit.

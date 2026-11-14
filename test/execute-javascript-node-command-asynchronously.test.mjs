@@ -5,7 +5,6 @@ import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { isolateJavascriptNodeCommandExecutionRequest } from "@red-cup-engineering/javascript-node-engineering-services-section/isolate-javascript-node-command-execution-request";
 import { executeJavascriptNodeCommandAsynchronously } from "../scripts/execute-javascript-node-command-asynchronously.mjs";
 
 const request = (arguments_, fields = {}) => ({
@@ -72,6 +71,7 @@ test("an isolated request writes only where it is bound, sees no hidden files an
     "require('node:net').connect(80, '1.1.1.1').on('error', (error) => { process.stdout.write(JSON.stringify({ secret, outside, network: error.code, home: process.env.HOME, keys: Object.keys(process.env).sort() })); });",
   ].join("\n");
   const node = path.dirname(path.dirname(process.execPath));
+  const { isolateJavascriptNodeCommandExecutionRequest } = await import("@red-cup-engineering/javascript-node-engineering-services-section/isolate-javascript-node-command-execution-request");
   const receipt = await executeJavascriptNodeCommandAsynchronously(isolateJavascriptNodeCommandExecutionRequest({
     type: "JavascriptNodeCommandIsolationRequest",
     version: 1,
