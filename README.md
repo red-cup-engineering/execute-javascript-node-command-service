@@ -9,52 +9,24 @@
 
 Executes one exact typed program request without a shell and returns its complete immutable receipt; also executes a request with this process's own stdio inherited by the child for a delegate that must hand its live stdin/stdout/stderr connection straight to another program.
 
-## Original Code package 0.4.1-dev.0 qualification and File integration
+## Run the tests
 
-This is an additive **source candidate** of the original Code synchronous
-executor. The v1 invocation request/receipt schema and `executeJavascriptNodeCommand`
-entrypoint remain unchanged; the new versioned, frozen
-`javascriptNodeCommandExecutionPolicy` export lets an original File or
-Systems consumer reject an executor without the admitted local inherited-FD
-and finite-output semantics **before** it begins any native effect.
+Install the dependencies and run `npm test` on Node 24 or later. The suite
+checks typed request admission, captured and inherited streams, cancellation
+and timeouts. On Linux with util-linux installed, it also checks that a second
+process observes a file lock until the original descriptor is released.
+`npm run test:native-flock` runs those descriptor tests alone.
 
-The original policy is **not** an independent operator authorization.
-`inheritedFileDescriptors` is local host configuration; it never becomes
-model text, a caller-provided command field, a durable lease, an accepted
-FileRole, a native provider grant, or an installed host attestation.
-
-The original `test/original-kernel-flock-descriptor.test.mjs` exercises
-real Linux file descriptors and kernel `flock` in a newly selected native
-test. An independent external flock process must observe the Code-held lock;
-contending Code requests return the real kernel 75 refusal; shared
-descriptors preserve exclusion until release. Run on Linux Node24:
-
-```sh
-npm install --ignore-scripts --no-audit --no-fund --registry=https://registry.561.group/
-npm test
-npm run test:native-flock
-```
-
-The source-owned GitHub workflow also packs the original source twice
-with byte comparison, then installs that **same tarball** into an
-independent clean recipient and executes
-`test/installed-original-code-consumer.mjs` through the public package
-export. Only after that native receiving does a separate least-privileged
-GitHub/Sigstore job attest those exact tested archive bytes and check
-a tampered subject rejects. Any failed job or unavailable private registry
-means the **release candidate is not qualified**. Even a passing attestation
-is a source/build witness, not package registry publication or accepted
-File/CDE/Moneyday operation.
-
-The original File `0.8.5-dev.1` source separately requires a
-preprovisioned lock leaf and tests original Code 0.4.0. Code 0.4.1-dev.0
-does not install that private File source, grant its controlled-writer
-roles, or replace its full dependency-closed receiving obligation.
+The asynchronous tests were recovered from published package 0.4.8. The other
+contract and descriptor tests, including `test/installed-original-code-consumer.mjs`,
+come from 0.4.6. To check the installed Linux entry point independently, copy
+that consumer script into a project that has installed this package and run
+`node installed-original-code-consumer.mjs`.
 
 ## Synchronous local execution policy
 
 `executeJavascriptNodeCommand(request, policy)` admits the unchanged exact
-`JavascriptNodeCommandExecutionRequest@1` through its private JSON/SignCell-typed execution boundary and
+`JavascriptNodeCommandExecutionRequest@1` using JSON Engine to snapshot the request and Typed Content to validate its schema and
 projects the unchanged immutable `JavascriptNodeCommandExecutionReceipt@1`.
 Policy is local trusted caller configuration, not request data or an additional
 NDJSON operation field. The existing descriptor-inheritance proposal and its File
