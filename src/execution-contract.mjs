@@ -9,7 +9,7 @@ function contract(name, schema) {
   return result.value;
 }
 const requestType = contract("JavascriptNodeCommandExecutionRequest@1", inputSchema);
-const recordType = contract("JavascriptNodeCommandExecutionReceipt@1", outputSchema);
+const receiptType = contract("JavascriptNodeCommandExecutionReceipt@1", outputSchema);
 
 function receive(type, candidate) {
   // The JSON owner snapshots inert values and refuses accessors/lossy carriers
@@ -22,14 +22,14 @@ function receive(type, candidate) {
 
 /** Admit the current executor's exact data request before any native effect.
  * Policy and operator authority are not invocation fields. */
-export function validateExecutionRequest(candidate) {
+export function admitExecutionRequest(candidate) {
   return receive(requestType, candidate);
 }
 
 /** Retain actual native observations without inferring success, rollback,
  * descendant quiescence, or authorization from a receipt. */
-export function projectExecutionRecord({ request, result }) {
-  return receive(recordType, {
+export function projectExecutionReceipt({ request, result }) {
+  return receive(receiptType, {
     type: "JavascriptNodeCommandExecutionReceipt", version: 1, request, result,
   });
 }

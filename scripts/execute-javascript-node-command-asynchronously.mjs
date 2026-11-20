@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { validateExecutionRequest, projectExecutionRecord } from "../src/execution-contract.mjs";
+import { admitExecutionRequest, projectExecutionReceipt } from "../src/execution-contract.mjs";
 
 
 
@@ -35,7 +35,7 @@ function killGroup(child) {
  *   An unexpected receipt-construction fault rejects, rather than hanging or inventing a receipt.
  */
 export function executeJavascriptNodeCommandAsynchronously(candidateRequest, policy = {}) {
-  const request = validateExecutionRequest(candidateRequest);
+  const request = admitExecutionRequest(candidateRequest);
   if (policy === null || typeof policy !== "object" || Array.isArray(policy) || !positive(policy.timeoutMilliseconds) || !positive(policy.outputLimit)
     || (policy.signal !== undefined && !(policy.signal instanceof AbortSignal))) {
     throw new TypeError("execution policy requires positive time/output bounds and a native caller signal when supplied");
@@ -54,12 +54,12 @@ export function executeJavascriptNodeCommandAsynchronously(candidateRequest, pol
       clearTimeout(timer);
       if (abort) policy.signal?.removeEventListener("abort", abort);
       try {
-        resolve(projectExecutionRecord({
+        resolve(projectExecutionReceipt({
           request,
           result: { type: "JavascriptNodeCommandExecutionResult", version: 1, status, signal, stdout, stderr, error },
         }));
-      } catch (recordError) {
-        reject(recordError);
+      } catch (receiptError) {
+        reject(receiptError);
       }
     };
     let child;
