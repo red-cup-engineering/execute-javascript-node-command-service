@@ -20,7 +20,7 @@
   "files": [
     "scripts",
     "package.json",
-    "data/records/schema",
+    "data/records/schemas",
     "src",
     "test"
   ],

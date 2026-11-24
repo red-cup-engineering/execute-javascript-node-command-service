@@ -4,8 +4,8 @@ import { admitExecutionRequest, projectExecutionReceipt } from "../src/execution
 
 
 
-import operationInputSchema from "../data/records/schema/execute-javascript-node-command.input.schema.json" with { type: "json" };
-import operationOutputSchema from "../data/records/schema/execute-javascript-node-command.output.schema.json" with { type: "json" };
+import operationInputSchema from "../data/records/schemas/execute-javascript-node-command.input.schema.json" with { type: "json" };
+import operationOutputSchema from "../data/records/schemas/execute-javascript-node-command.output.schema.json" with { type: "json" };
 import { runJavascriptNodeOperation } from "@red-cup-engineering/node-js-function-engineering-services-section/operation";
 
 /** Local policy capability, not caller request data or a process-quiescence receipt. */

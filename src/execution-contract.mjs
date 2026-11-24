@@ -1,7 +1,7 @@
 import { canonicalizeJson } from "@red-cup-engineering/json-engine/canonical-json";
 import { defineType, admit } from "@red-cup-engineering/typed-content";
-import inputSchema from "../data/records/schema/execute-javascript-node-command.input.schema.json" with { type: "json" };
-import outputSchema from "../data/records/schema/execute-javascript-node-command.output.schema.json" with { type: "json" };
+import inputSchema from "../data/records/schemas/execute-javascript-node-command.input.schema.json" with { type: "json" };
+import outputSchema from "../data/records/schemas/execute-javascript-node-command.output.schema.json" with { type: "json" };
 
 function contract(name, schema) {
   const result = defineType({ id: name, name, description: name, schema, parents: [] });
