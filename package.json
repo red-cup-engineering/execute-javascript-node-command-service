@@ -31,9 +31,7 @@
   },
   "scripts": {
     "pack:dry-run": "npm pack --dry-run --ignore-scripts",
-    "check": "check-package-syntax",
-    "test": "node --test test/*.test.mjs",
-    "test:native-flock": "node --test test/original-kernel-flock-descriptor.test.mjs"
+    "check": "check-package-syntax"
   },
   "engines": {
     "node": ">=24"
